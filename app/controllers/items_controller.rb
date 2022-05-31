@@ -1,7 +1,9 @@
 class ItemsController < ApplicationController
-    before_action :find_item, only: [:show, :edit, :update, :destroy]
+    before_action :find_item, only: [:show, :edit, :update, :destroy, :complete]
     def index
-        @items = Item.all
+        if user_signed_in?
+            @items = Item.where(:user_id => current_user.id).order("created_at DESC")
+        end
     end
 
     def show
@@ -9,11 +11,11 @@ class ItemsController < ApplicationController
     end
 
     def new
-        @item = Item.new
+        @item = current_user.items.build
     end
 
     def create
-        @item = Item.create(item_params)
+        @item = current_user.items.build(item_params)
         respond_to do |format|
             if @item.save
                 format.html { redirect_to root_path, :notice => 'Item was successfully created !' } 
@@ -46,6 +48,13 @@ class ItemsController < ApplicationController
         end
     end
 
+    def complete
+        respond_to do |format|
+            if @item.update_attribute(:completed_at, Time.now)
+                format.html { redirect_to root_path }
+            end
+        end
+    end
 
 
     private

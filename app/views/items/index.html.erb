@@ -1,8 +1,11 @@
-<h1> All Items </h1>
-<% @items.each do |item|%>
-   <h3> <%= link_to item.title, item_path(item) %> </h3>
-   <p> <%= item.description %> </p>
-   <hr/>
+<% if user_signed_in?%>
+   <% @items.each do |item|%>
+      <h3> <%= link_to item.title, item_path(item) %> </h3>
+      <p> <%= item.description %> </p>
+      <%= button_to "Mark as Complete", complete_item_path(item), method: :patch, class:"btn btn-success"%>
+      <%= button_to "Delete This Item", item_path(item), method: :delete, class:"btn btn-danger", form: {data: {turbo_confirm: 'Are you sure?'}}%>
+      <hr/>
+   <%end%>
+<% else %>
+   <%= render 'layouts/warning_landing_page'%>
 <%end%>
-
-<%= link_to "New Item", new_item_path, class:"btn btn-secondary"%>
