@@ -1,11 +1,21 @@
 <% if user_signed_in?%>
-   <% if !current_user.items.blank?%>
-   <div class="d-flex justify-content-end my-2"> <%= button_to "Delete All Items", delete_all_items_path, method: :post, form: { data: { turbo_confirm: "Are you sure?" } }, class:"btn btn-outline-danger"%></div>
-   <% end %>
+   
 
-   <div id="items">
-      <%= render @items%>
-   </div>
+   <%= turbo_frame_tag "items" do%>
+      <% if !current_user.items.blank?%>
+         <div class="d-flex justify-content-end my-2"> <%= button_to "Delete All Items", delete_all_items_path, method: :post, form: { data: { turbo_confirm: "Are you sure?" } }, class:"btn btn-outline-danger"%></div>
+      <% end %>
+      
+      <div id="items">
+         <%= render @items%>
+      </div>
+
+      <%= turbo_frame_tag "new-item" do%>
+         <div class="d-flex justify-content-end my-2"> <%= link_to 'Add New Item', new_item_path, class:"btn btn-outline-success"%> </div>
+      <%end%>
+
+   <%end%>
+
 
 <% else %>
    <%= render 'layouts/warning_landing_page'%>

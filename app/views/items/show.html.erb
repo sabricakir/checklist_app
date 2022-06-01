@@ -1,5 +1,10 @@
-<h3> <%= @item.title %> </h3>
-<p> <%= @item.description %> </p>
-<%= link_to "Back To All Items", root_path, class:"btn btn-secondary"%>
-<%= link_to "Edit This Item", edit_item_path(@item), class:"btn btn-secondary"%>
-<hr/>
+
+<%= turbo_frame_tag "items" do%>
+    <h3> <%= @item.title %> </h3>
+    <p> <%= @item.description %> </p>
+    <%= link_to "Back To All Items", root_path, class:"btn btn-secondary"%>
+    <%= turbo_frame_tag "edit-item" do%>
+        <%= link_to "Edit This Item", edit_item_path(@item), class:"btn btn-secondary"%>
+    <%end%>
+    <hr/>
+<%end%>
