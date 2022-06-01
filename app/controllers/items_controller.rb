@@ -15,10 +15,11 @@ class ItemsController < ApplicationController
     end
 
     def create
+
         @item = current_user.items.build(item_params)
         respond_to do |format|
             if @item.save
-                format.html { redirect_to root_path, :notice => 'Item was successfully created !' } 
+                format.html{redirect_to root_path}
             else
                 render 'new'
             end
@@ -43,7 +44,7 @@ class ItemsController < ApplicationController
     def destroy
         respond_to do |format|
             if @item.destroy
-                format.html { redirect_to root_path, :notice => 'Item was successfully deleted !' } 
+                format.html { redirect_to root_path} 
             end
         end
     end
@@ -54,6 +55,23 @@ class ItemsController < ApplicationController
                 format.html { redirect_to root_path }
             end
         end
+    end
+
+    def delete_all
+        if !current_user.items.blank?
+            respond_to do |format|
+                if current_user.items.delete_all
+                    format.html { redirect_to root_path, :notice => 'All Item was successfully deleted !'}
+                else
+                    format.html { redirect_to root_path, :notice => 'All Item NOT successfully deleted !'}
+                end
+            end
+        else
+            respond_to do |format|
+                format.html {redirect_to root_path, :alert => "There is no item in here yet!"}
+            end
+        end
+        
     end
 
 
